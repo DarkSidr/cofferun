@@ -7,6 +7,7 @@
   const Truck = App.Truck;
   const DataStore = App.DataStore;
   const FormHandler = App.FormHandler;
+  const Validation = App.Validation;
   const CheckList = App.CheckList;
   const myTruck = new Truck("ncc-1701", new DataStore());
   window.myTruck = myTruck;
@@ -18,4 +19,6 @@
     myTruck.createOrder.call(myTruck, data);
     checkList.addRow.call(checkList, data);
   });
+
+  formHandler.addInputHandler(Validation.isCompanyEmail);
 })(window);

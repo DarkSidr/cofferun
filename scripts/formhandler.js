@@ -35,6 +35,19 @@
     });
   };
 
+  FormHandler.prototype.addInputHandler = function (fn) {
+    this.$formElement.on("input", '[name="emailAddress"]', function (event) {
+      const emailAddress = event.target.value;
+      let message = " ";
+      if (fn(emailAddress)) {
+        event.target.setCustomValidity("");
+      } else {
+        message = emailAddress + " is not an authorized email address";
+        event.target.setCustomValidity(message);
+      }
+    });
+  };
+
   App.FormHandler = FormHandler;
   window.App = App;
 })(window);
