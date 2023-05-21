@@ -1,0 +1,40 @@
+(function (window) {
+  "use strict";
+  const App = window.App || {};
+  const $ = window.jQuery;
+
+  function RemoteDataStore(url) {
+    if (!url) {
+      throw new Error("No remote URL supplied.");
+    }
+    this.serverUrl = url;
+  }
+
+  RemoteDataStore.prototype.add = function (key, val) {
+    $.post(this.serverUrl, val, function (serverResonse) {
+      console.log(serverResonse);
+    });
+  };
+
+  RemoteDataStore.prototype.getAll = function (cb) {
+    $.get(this.serverUrl, function (serverResonse) {
+      console.log(serverResonse);
+      cb(serverResonse);
+    });
+  };
+
+  RemoteDataStore.prototype.get = function (key, cb) {
+    $.get(this.serverUrl + "/" + key, function (serverResonse) {
+      cb(serverResonse);
+    });
+  };
+
+  RemoteDataStore.prototype.remove = function (key) {
+    $.ajax(this.serverUrl + "/" + key, {
+      type: "DELETE",
+    });
+  };
+
+  App.RemoteDataStore = RemoteDataStore;
+  window.App = App;
+})(window);
