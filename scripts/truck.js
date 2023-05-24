@@ -9,19 +9,26 @@
   }
 
   Truck.prototype.createOrder = function (order) {
-    this.db.add(order.emailAddress, order);
+    return this.db.add(order.emailAddress, order);
   };
 
   Truck.prototype.deliverOrder = function (customId) {
-    this.db.remove(customId);
+    return this.db.remove(customId);
   };
 
-  Truck.prototype.printOrders = function () {
-    const customerIdArray = Object.keys(this.db.getAll());
-    console.log("Truck #" + this.truckId + " has pending orders: ");
-    customerIdArray.forEach(
-      function (id) {
-        console.log(this.db.get(id));
+  Truck.prototype.printOrders = function (printFn) {
+    return this.db.getAll().then(
+      function (orders) {
+        const customerIdArray = Object.keys(orders);
+        console.log("Truck #" + this.truckId + " has pending orders: ");
+        customerIdArray.forEach(
+          function (id) {
+            console.log(orders[id]);
+            if (printFn) {
+              printFn(orders[id]);
+            }
+          }.bind(this)
+        );
       }.bind(this)
     );
   };

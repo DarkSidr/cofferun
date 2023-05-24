@@ -12,15 +12,17 @@
   const Validation = App.Validation;
   const CheckList = App.CheckList;
   const remoteDS = new RemoteDataStore(SERVER_URL);
-  const myTruck = new Truck("ncc-1701", remoteDS);
+  const myTruck = new Truck("ncc-1701", new DataStore());
   window.myTruck = myTruck;
   const checkList = new CheckList(CHECKLIST_SELECTOR);
   checkList.addClickHandler(myTruck.deliverOrder.bind(myTruck));
   const formHandler = new FormHandler(FORM_SELECTOR);
+  myTruck.printOrders(checkList.addRow.bind(checkList));
 
   formHandler.addSubmitHandler(function (data) {
-    myTruck.createOrder.call(myTruck, data);
-    checkList.addRow.call(checkList, data);
+    return myTruck.createOrder.call(myTruck, data).then(function () {
+      checkList.addRow.call(checkList, data);
+    });
   });
 
   formHandler.addInputHandler(Validation.isCompanyEmail);
